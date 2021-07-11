@@ -1,13 +1,13 @@
 import re
 import json
-from mitmproxy import http
+from mitmproxy import http, ctx
 
 
 class ModifyName:
 
     def response(self, flow: http.HTTPFlow):
         url = flow.request.pretty_url
-        if "v5/stock/batch/quote.json" in flow.request.pretty_url:
+        if "v5/stock/batch/quote.json" in flow.request.pretty_url and "x=" in flow.request.url:
             data = json.loads(flow.response.get_text())
             n = 1
             for i in data["data"]["items"]:
@@ -20,7 +20,7 @@ class ModifyPercent:
 
     def response(self, flow: http.HTTPFlow):
         url = flow.request.pretty_url
-        if "v5/stock/batch/quote.json" in flow.request.pretty_url:
+        if "v5/stock/batch/quote.json" in flow.request.pretty_url and "x=" in flow.request.url:
             data = json.loads(flow.response.get_text())
             n = 0
             items = [0.0, 0.0000001, -0.0000001]
@@ -38,7 +38,7 @@ class DoubleFloat:
 
     def response(self, flow: http.HTTPFlow):
         url = flow.request.pretty_url
-        if "v5/stock/batch/quote.json" in flow.request.pretty_url:
+        if "v5/stock/batch/quote.json" in flow.request.pretty_url and "x=" in flow.request.pretty_url:
             text = flow.response.get_text()
             text = re.sub("(\d+\.\d+)", self.double, text)
             flow.response.text = text
@@ -48,7 +48,7 @@ class DoubleFloat2:
 
     def response(self, flow: http.HTTPFlow):
         url = flow.request.pretty_url
-        if "v5/stock/batch/quote.json" in flow.request.pretty_url:
+        if "v5/stock/batch/quote.json" in flow.request.pretty_url and "x=" in flow.request.url:
             data = json.loads(flow.response.get_text())
             data = self.double_float(data)
             flow.response.text = json.dumps(data)
@@ -67,8 +67,24 @@ class DoubleFloat2:
         return data
 
 
+class MapLocalA:
+
+    def request(self, flow: http.HTTPFlow):
+        url = flow.request.pretty_url
+        if "v5/stock/batch/quote.json" in flow.request.pretty_url and "x=" in flow.request.url:
+            with open("./test.json") as f:
+                res = json.dumps(json.loads(f.read()))
+                ctx.log.info(res)
+
+                flow.response = http.HTTPResponse.make(
+                    200,
+                    res,
+                )
+
+
 addons = [
     ModifyName(),
     ModifyPercent(),
-    DoubleFloat()
+    DoubleFloat(),
+    # MapLocalA()
 ]

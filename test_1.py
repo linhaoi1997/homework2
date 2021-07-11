@@ -1,3 +1,5 @@
+import json
+
 
 class Test:
     def double_float(self, data, times=2):
@@ -15,14 +17,20 @@ class Test:
 
 
 if __name__ == '__main__':
-    test = {
-        "data1": {
-            "h1": 192.33,
-            "h2": "192.33",
-        }, "data2": {
-            "h3": 11,
-            "h4": "ss",
-        },
-    }
+    # test = {
+    #     "data1": {
+    #         "h1": 192.33,
+    #         "h2": "192.33",
+    #     }, "data2": {
+    #         "h3": 11,
+    #         "h4": "ss",
+    #     },
+    # }
+    #
+    # print(Test().double_float(test))
+    with open("./test.json") as f:
+        print(f.read())
 
-    print(Test().double_float(test))
+
+    "https://stock.xueqiu.com/v5/stock/batch/quote.json?_t=1NETEASEc822154d3c6b74d024e7c1e81a25db5f.7888237832.1626000037560.1626005030555&_s=63    b3e2&symbol=SH000001%2CSZ399001%2CSZ399006&extend=detail"
+    "https://stock.xueqiu.com/v5/stock/batch/quote.json?_t=1NETEASEc822154d3c6b74d024e7c1e81a25db5f.7888237832.1626000037560.1626005030844&_s=a1    7714&x=0.264&symbol=SH603026%2CDIDI%2CBABA&extend=detail"
