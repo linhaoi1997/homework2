@@ -3,10 +3,6 @@ import json
 from mitmproxy import http
 
 
-def double(match_obj):
-    return str(float(match_obj.group(1)) * 2)
-
-
 class ModifyName:
 
     def response(self, flow: http.HTTPFlow):
@@ -35,11 +31,16 @@ class ModifyPercent:
 
 
 class DoubleFloat:
+
+    @staticmethod
+    def double(match_obj):
+        return str(float(match_obj.group(1)) * 2)
+
     def response(self, flow: http.HTTPFlow):
         url = flow.request.pretty_url
         if "v5/stock/batch/quote.json" in flow.request.pretty_url:
             text = flow.response.get_text()
-            text = re.sub("(\d+\.\d+)", double, text)
+            text = re.sub("(\d+\.\d+)", self.double, text)
             flow.response.text = text
 
 
