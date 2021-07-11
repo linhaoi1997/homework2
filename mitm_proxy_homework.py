@@ -43,6 +43,29 @@ class DoubleFloat:
             flow.response.text = text
 
 
+class DoubleFloat2:
+
+    def response(self, flow: http.HTTPFlow):
+        url = flow.request.pretty_url
+        if "v5/stock/batch/quote.json" in flow.request.pretty_url:
+            data = json.loads(flow.response.get_text())
+            data = self.double_float(data)
+            flow.response.text = json.dumps(data)
+
+    def double_float(self, data, times=2):
+        if isinstance(data, dict):
+            for k in data.keys():
+                data[k] = self.double_float(data[k], times)
+        elif isinstance(data, list):
+            data = [self.double_float(i, times) for i in data]
+        else:
+            try:
+                data = float(data) * times
+            except Exception as e:
+                pass
+        return data
+
+
 addons = [
     ModifyName(),
     ModifyPercent(),
