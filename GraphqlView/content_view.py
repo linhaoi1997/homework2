@@ -15,6 +15,7 @@ def double_space(match_obj):
 
 
 class ViewGraphqlQuery(contentviews.View):
+    """查看graphql的query"""
     name = "GraphqlQuery"
     content_types = ["text/plain"]
 
@@ -26,6 +27,7 @@ class ViewGraphqlQuery(contentviews.View):
 
 
 class ViewGraphqlVariables(contentviews.View):
+    """查看graphql的varibales"""
     name = "GraphqlVariables"
     content_types = ["text/plain"]
 

@@ -32,3 +32,5 @@ urwid==2.0.1
 Werkzeug==1.0.1
 wsproto==0.15.0
 zstandard==0.13.0
+
+beeprint~=2.4.10

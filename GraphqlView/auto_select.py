@@ -1,3 +1,5 @@
+"""重写auto选择的逻辑，自动将graphql选择为request的第一选项"""
+
 from mitmproxy import contentviews
 from mitmproxy.net import http
 from mitmproxy.utils import strutils
