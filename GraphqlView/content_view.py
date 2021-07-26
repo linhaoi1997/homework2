@@ -43,16 +43,43 @@ class ViewGraphqlVariables(contentviews.View):
         return "graphql variables", result()
 
 
+class ViewJsonString(contentviews.View):
+    """查看graphql的varibales"""
+    name = "JsonString"
+    content_types = ["text/plain"]
+
+    def __call__(self, data, **metadata) -> contentviews.TViewResult:
+        data = json.loads(data)
+
+        def dfs(datas: dict):
+            for key, value in datas.items():
+                if isinstance(value, str):
+                    try:
+                        datas[key] = json.loads(value)
+                    except:
+                        pass
+                elif isinstance(value, dict):
+                    dfs(value)
+
+        dfs(data)
+        return "json_string", contentviews.format_dict(data)
+
+
 view = ViewGraphqlQuery()
 view2 = ViewGraphqlVariables()
+
+
+# view3 = ViewJsonString()
 
 
 def load(l):
     views[0] = ViewAuto()
     contentviews.add(view)
     contentviews.add(view2)
+    # contentviews.add(view3)
 
 
 def done():
     contentviews.remove(view)
     contentviews.remove(view2)
+    # contentviews.remove(view3)
